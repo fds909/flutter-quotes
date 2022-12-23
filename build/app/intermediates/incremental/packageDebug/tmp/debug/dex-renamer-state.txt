@@ -1,0 +1,4 @@
+#Fri Dec 23 16:44:50 CET 2022
+base.0=C\:\\Users\\Utente\\Desktop\\flutter\\2. Flutter Advanced\\5. Data Persistency\\quotes\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
