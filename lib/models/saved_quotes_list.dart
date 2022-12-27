@@ -22,4 +22,9 @@ class SavedQuotesList {
     // in uqesto caso vogliamo inserire la quote in testa alla lista
     quotes.removeWhere((it) => it.id == savedQuotesModel.id);
   }
+
+  // Verifica se esiste una quote con lo stesso testo del parametro passato
+  bool contains(String text) {
+    return quotes.any((item) => item.text == text);
+  }
 }

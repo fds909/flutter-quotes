@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:quotes/models/saved_quote_model.dart';
 import 'package:quotes/styles/color_palette.dart';
 import 'package:quotes/repositories/quotes_repository.dart';
 import 'package:quotes/models/saved_quotes_list.dart';
@@ -29,17 +30,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   void createQuote(String text) {
-    savedQuotes.create(text).then((_) {
-      setState(() {});
-    });
+    if (!savedQuotes.contains(text)) {
+      savedQuotes.create(text).then((_) {
+        setState(() {});
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Quote already saved"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   void refreshQuote() {
     setState(() {
       mainQuoteFuture = QuotesRepositories.get();
     });
+  }
 
-    print("${savedQuotes.quotes}}");
+  void removeQuote(SavedQuotesModel quote) {
+    setState(() {
+      savedQuotes.delete(savedQuotes.quotes[0]).then((_) {
+        setState(() {});
+      });
+    });
   }
 
   @override
@@ -101,8 +117,12 @@ class _HomePageState extends State<HomePage> {
                           // Save to Favourites IconButton
                           IconButton(
                             icon: Icon(
-                              Icons.favorite_outline,
-                              color: Colors.red.shade300,
+                              savedQuotes.contains(snapshot.data!)
+                                  ? Icons.favorite_rounded
+                                  : Icons.favorite_outline,
+                              color: savedQuotes.contains(snapshot.data!)
+                                  ? Colors.red
+                                  : Colors.red.shade300,
                               size: 40,
                             ),
                             onPressed: () => createQuote(snapshot.data!),
@@ -122,7 +142,7 @@ class _HomePageState extends State<HomePage> {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) => GestureDetector(
-          onDoubleTap: () {},
+          onDoubleTap: () => removeQuote(savedQuotes.quotes[index]),
           child: Container(
             decoration: BoxDecoration(
               color: colors[index % colors.length],
